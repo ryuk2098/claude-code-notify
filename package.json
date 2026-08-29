@@ -1,0 +1,133 @@
+{
+  "name": "claude-code-notify",
+  "displayName": "Claude Code Notify",
+  "description": "Plays a distinct sound when Claude Code needs your attention or finishes a task.",
+  "version": "0.7.0",
+  "publisher": "local",
+  "private": true,
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "main": "./extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "claudeCodeNotify.showList",
+        "title": "Claude Code Notify: Show Sessions"
+      },
+      {
+        "command": "claudeCodeNotify.jumpToNext",
+        "title": "Claude Code Notify: Jump to Next Session Needing You"
+      },
+      {
+        "command": "claudeCodeNotify.toggleMute",
+        "title": "Claude Code Notify: Toggle Mute"
+      },
+      {
+        "command": "claudeCodeNotify.clear",
+        "title": "Claude Code Notify: Mark All as Read"
+      },
+      {
+        "command": "claudeCodeNotify.testAttention",
+        "title": "Claude Code Notify: Test 'Needs Attention' Event"
+      },
+      {
+        "command": "claudeCodeNotify.testComplete",
+        "title": "Claude Code Notify: Test 'Complete' Event"
+      },
+      {
+        "command": "claudeCodeNotify.testPush",
+        "title": "Claude Code Notify: Send Test Phone Push"
+      }
+    ],
+    "configuration": {
+      "title": "Claude Code Notify",
+      "properties": {
+        "claudeCodeNotify.attentionSound": {
+          "type": "string",
+          "default": "/System/Library/Sounds/Glass.aiff",
+          "description": "Sound file played when Claude Code needs your approval/attention."
+        },
+        "claudeCodeNotify.completeSound": {
+          "type": "string",
+          "default": "/System/Library/Sounds/Hero.aiff",
+          "description": "Sound file played when Claude Code finishes responding."
+        },
+        "claudeCodeNotify.volume": {
+          "type": "number",
+          "default": 1,
+          "minimum": 0,
+          "maximum": 2,
+          "description": "Playback volume (afplay -v). 1 = normal."
+        },
+        "claudeCodeNotify.showStatusBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the Claude item in the status bar: orange with counts while sessions need you, blue when only completions are unread. Click for the list."
+        },
+        "claudeCodeNotify.showToast": {
+          "type": "boolean",
+          "default": false,
+          "description": "Also show a VS Code toast (with an Open button) for each event."
+        },
+        "claudeCodeNotify.focusTerminalOnWindowFocus": {
+          "type": "boolean",
+          "default": true,
+          "description": "When you switch to a VS Code window where a Claude Code session is waiting for approval, automatically reveal that terminal."
+        },
+        "claudeCodeNotify.dismissOnView": {
+          "type": "boolean",
+          "default": false,
+          "description": "Heuristic: mark a notification read when you switch to its terminal or focus its window. Off by default \u2014 notifications then clear only when you reply/approve or dismiss them explicitly (list click, \u2715, Mark all as read, Jump)."
+        },
+        "claudeCodeNotify.autoReadDelay": {
+          "type": "number",
+          "default": 0,
+          "minimum": 0,
+          "description": "Optional: if a notification arrives while its terminal is already in front in the focused window, mark it read after this many seconds. 0 (default) = off; notifications clear only when you reply/approve, switch to that terminal, or dismiss them."
+        },
+        "claudeCodeNotify.nagIntervalMinutes": {
+          "type": "number",
+          "default": 0,
+          "minimum": 0,
+          "description": "Repeat the 'needs attention' sound every N minutes while any session is still waiting for approval. 0 = off."
+        },
+        "claudeCodeNotify.ntfyTopic": {
+          "type": "string",
+          "default": "",
+          "description": "ntfy.sh topic to push phone notifications to. Subscribe to this exact topic in the free ntfy app. Treat it like a password \u2014 anyone who knows it can read your pushes. Empty = phone push off."
+        },
+        "claudeCodeNotify.ntfyServer": {
+          "type": "string",
+          "default": "https://ntfy.sh",
+          "description": "ntfy server base URL. Change only if you self-host ntfy."
+        },
+        "claudeCodeNotify.ntfyPush": {
+          "type": "string",
+          "enum": [
+            "off",
+            "attention",
+            "all"
+          ],
+          "default": "attention",
+          "description": "When to push to your phone: 'off', 'attention' (approvals only), or 'all' (approvals + completions)."
+        }
+      }
+    },
+    "keybindings": [
+      {
+        "command": "claudeCodeNotify.jumpToNext",
+        "key": "ctrl+alt+c",
+        "mac": "ctrl+cmd+c"
+      },
+      {
+        "command": "claudeCodeNotify.showList",
+        "key": "ctrl+alt+shift+c",
+        "mac": "ctrl+cmd+shift+c"
+      }
+    ]
+  }
+}
